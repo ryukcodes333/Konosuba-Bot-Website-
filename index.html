@@ -27,6 +27,7 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Cinzel:wght@700;900&display=swap">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -38,7 +39,7 @@
       <rect width="36" height="36" rx="10" fill="url(#ng)"/>
       <text x="18" y="24" text-anchor="middle" font-family="sans-serif" font-weight="900" font-size="18" fill="white">K</text>
       <defs><linearGradient id="ng" x1="0" y1="0" x2="36" y2="36" gradientUnits="userSpaceOnUse">
-        <stop stop-color="#7c3aed"/><stop offset="1" stop-color="#ec4899"/>
+        <stop stop-color="#0096c7"/><stop offset="1" stop-color="#48cae4"/>
       </linearGradient></defs>
     </svg>
     <span>Konosuba</span>
@@ -96,13 +97,17 @@
   <!-- HERO -->
   <section class="hero">
     <div class="hero-bg"></div>
+    <div class="hero-particles">
+      <span></span><span></span><span></span><span></span>
+      <span></span><span></span><span></span><span></span>
+    </div>
     <div class="hero-badge">
-      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <svg width="14" height="14" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path d="M13.6 2.4C12.2 0.9 10.2 0 8 0C3.6 0 0 3.6 0 8C0 9.4 0.4 10.8 1 12L0 16L4 15C5.2 15.6 6.6 16 8 16C12.4 16 16 12.4 16 8C16 5.8 15.1 3.8 13.6 2.4Z" fill="#25D366"/>
       </svg>
       The ultimate Konosuba WhatsApp experience
     </div>
-    <h1>Enter the<br><span class="grad">Konosuba World</span></h1>
+    <h1>Enter the<br><span class="grad-blue">Konosuba World</span></h1>
     <p>A feature-rich WhatsApp gaming companion. Collect anime cards, battle Pokémon, conquer dungeons, and dominate the economy.</p>
     <div class="hero-actions">
       <a class="btn btn-primary" href="#register" data-page="register">
@@ -110,6 +115,14 @@
         <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
       </a>
       <a class="btn btn-ghost" href="#leaderboard" data-page="leaderboard">View Leaderboard</a>
+    </div>
+    <div class="hero-cards-float">
+      <div class="hero-card-float">🃏</div>
+      <div class="hero-card-float">⚡</div>
+      <div class="hero-card-float">🃏</div>
+      <div class="hero-card-float">⚔️</div>
+      <div class="hero-card-float">🃏</div>
+      <div class="hero-card-float">🎱</div>
     </div>
   </section>
 
@@ -538,7 +551,7 @@
     <div class="auth-box">
       <div class="auth-icon">🔑</div>
       <h2>Welcome back</h2>
-      <p>Login with your WhatsApp number and password</p>
+      <p>Login with your phone number and password</p>
       <form onsubmit="handleLogin(event)" autocomplete="on">
         <div class="form-group">
           <label for="login-phone">WhatsApp Number</label>
@@ -547,16 +560,13 @@
         <div class="form-group">
           <label for="login-password">Password</label>
           <input id="login-password" class="form-input" type="password" placeholder="Your password" autocomplete="current-password" required>
-          <div class="form-hint">Use the password you set when registering on WhatsApp</div>
+          <div class="form-hint">The password you set when registering</div>
         </div>
         <div id="login-error" class="form-error"></div>
         <button id="login-btn" class="btn btn-primary" type="submit" style="width:100%;justify-content:center;padding:12px">Login</button>
       </form>
       <div class="auth-link">
-        Don't have an account? <a href="#register" data-page="register">Register first on WhatsApp</a>
-      </div>
-      <div style="margin-top:1rem;padding:12px;background:var(--bg3);border-radius:var(--radius-sm);font-size:0.8rem;color:var(--muted);border:1px solid var(--border)">
-        Already on WhatsApp? Send <strong style="color:var(--purple-light)">.creds</strong> to the bot and it will DM you your login details.
+        Don't have an account? <a href="#register" data-page="register">Create one free</a>
       </div>
     </div>
   </div>
@@ -570,31 +580,37 @@
     <div class="auth-box">
       <div class="auth-icon">⚡</div>
       <h2>Join the World</h2>
-      <p>Create your account directly on WhatsApp, then login here</p>
-
-      <div style="background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-sm);padding:1.25rem;margin-bottom:1.5rem">
-        <div style="font-weight:700;margin-bottom:12px;font-size:0.9rem">How to register:</div>
-        <div style="display:flex;flex-direction:column;gap:10px">
-          <div class="step" style="font-size:0.85rem">
-            <div class="step-num" style="width:28px;height:28px;font-size:0.78rem;flex-shrink:0">1</div>
-            <span>Add the Konosuba Bot on WhatsApp</span>
-          </div>
-          <div class="step" style="font-size:0.85rem">
-            <div class="step-num" style="width:28px;height:28px;font-size:0.78rem;flex-shrink:0">2</div>
-            <span>Send: <code style="background:var(--bg2);padding:2px 8px;border-radius:6px;color:var(--purple-light)">.reg YourName | YourPassword</code></span>
-          </div>
-          <div class="step" style="font-size:0.85rem">
-            <div class="step-num" style="width:28px;height:28px;font-size:0.78rem;flex-shrink:0">3</div>
-            <span>Come back here and login with your WhatsApp number and that password</span>
-          </div>
+      <p>Create your free account and start your adventure</p>
+      <form onsubmit="handleRegister(event)" autocomplete="on">
+        <div class="form-group">
+          <label for="reg-name">Display Name</label>
+          <input id="reg-name" class="form-input" type="text" placeholder="e.g. Shadow, Kazuma" autocomplete="nickname" required minlength="2" maxlength="32">
         </div>
-        <div style="margin-top:12px;font-size:0.75rem;color:var(--muted)">Your phone number must match your WhatsApp number.</div>
+        <div class="form-group">
+          <label for="reg-phone">Phone Number <span style="color:var(--muted);font-weight:400">(with country code)</span></label>
+          <input id="reg-phone" class="form-input" type="tel" placeholder="e.g. 2348012345678" autocomplete="tel" required>
+          <div class="form-hint">Include country code, no spaces or + — e.g. 2348012345678 for Nigeria</div>
+        </div>
+        <div class="form-group">
+          <label for="reg-password">Password</label>
+          <input id="reg-password" class="form-input" type="password" placeholder="Min 6 characters" autocomplete="new-password" required minlength="6">
+        </div>
+        <div class="form-group">
+          <label for="reg-confirm">Confirm Password</label>
+          <input id="reg-confirm" class="form-input" type="password" placeholder="Repeat your password" autocomplete="new-password" required>
+        </div>
+        <div id="reg-error" class="form-error"></div>
+        <button id="reg-btn" class="btn btn-primary" type="submit" style="width:100%;justify-content:center;padding:12px">
+          Create Account
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
+        </button>
+      </form>
+      <div class="auth-link">Already have an account? <a href="#login" data-page="login">Login</a></div>
+      <div class="form-divider">or</div>
+      <div style="font-size:0.78rem;color:var(--muted);text-align:center;line-height:1.6">
+        Already registered on WhatsApp via <code style="background:var(--bg3);padding:1px 7px;border-radius:5px;color:var(--cyan)">.reg Name | Pass</code>?
+        Your existing account works — just <a href="#login" data-page="login" style="color:var(--cyan)">login</a>.
       </div>
-
-      <a class="btn btn-primary" href="#login" data-page="login" style="width:100%;justify-content:center;padding:12px">
-        Already registered? Login
-      </a>
-      <form onsubmit="handleRegister(event)" style="display:none"></form>
     </div>
   </div>
 </div>

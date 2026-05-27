@@ -30,6 +30,10 @@ function toast(msg, type = "info") {
   el._t = setTimeout(() => { el.className = ""; }, 3000);
 }
 
+function tierSymbol(tier) {
+  return { T1:"○", T2:"◇", T3:"◈", T4:"★", T5:"✦", T6:"❋", T7:"⬡", T8:"▲" }[tier] || "🃏";
+}
+
 function fmtNum(n) {
   if (n >= 1e6) return (n / 1e6).toFixed(1) + "M";
   if (n >= 1e3) return (n / 1e3).toFixed(1) + "k";
@@ -239,10 +243,10 @@ async function renderCards(page = 1) {
     grid.innerHTML = data.cards.map(c => {
       const tierClass = `tier-${c.tier || "T1"}`;
       return `
-        <div class="anime-card">
-          <img src="${c.image_url}" alt="${c.name}" loading="lazy"
-            onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
-          <div class="anime-card-fallback" style="display:none;background:var(--bg3)">🃏</div>
+        <div class="anime-card anime-card-noimg ${tierClass}-card" title="${c.name}">
+          <div class="anime-card-shine"></div>
+          <div class="anime-card-symbol">${tierSymbol(c.tier)}</div>
+          <div class="anime-card-center-name">${c.name}</div>
           <div class="anime-card-info">
             <div class="anime-card-name">${c.name}</div>
             <span class="tier-badge ${tierClass}">${c.rarity || c.tier}</span>
@@ -312,7 +316,7 @@ async function renderProfile() {
 function renderProfileData(u) {
   const xpForNext = (u.level || 1) * 100;
   const xpPct = Math.min(100, Math.round(((u.xp || 0) % xpForNext) / xpForNext * 100));
-  const phone = u.jid ? u.jid.replace("@s.whatsapp.net", "") : "";
+  const phone = u.phone ? String(u.phone) : "";
 
   document.getElementById("profile-content").innerHTML = `
     <div class="profile-cover"></div>
@@ -432,7 +436,7 @@ async function handleLogin(e) {
       method: "POST",
       body: JSON.stringify({ phone, password })
     });
-    setToken(data.user.jid.replace("@s.whatsapp.net", ""));
+    setToken(String(data.user.phone));
     currentUser = data.user;
     updateNavAuth();
     toast("Welcome back, " + (data.user.name || "adventurer") + "!", "success");
@@ -450,13 +454,30 @@ function renderRegister() {
   if (currentUser) { navigate("profile"); return; }
 }
 
-function handleRegister(e) {
+async function handleRegister(e) {
   e.preventDefault();
+  const name    = document.getElementById("reg-name").value.trim();
+  const phone   = document.getElementById("reg-phone").value.trim();
+  const password = document.getElementById("reg-password").value;
+  const confirm  = document.getElementById("reg-confirm").value;
   const err = document.getElementById("reg-error");
+  const btn = document.getElementById("reg-btn");
   err.style.display = "none";
-  err.textContent = "";
-  toast("To register, send .register on WhatsApp to the Konosuba bot. Then login here!", "info");
-  setTimeout(() => navigate("login"), 2500);
+  btn.textContent = "Creating account…"; btn.disabled = true;
+  try {
+    await api("/auth?action=register", {
+      method: "POST",
+      body: JSON.stringify({ name, phone, password, confirm })
+    });
+    toast("Account created! You can now login.", "success");
+    navigate("login");
+  } catch (e2) {
+    err.textContent = e2.message;
+    err.style.display = "block";
+  } finally {
+    btn.innerHTML = `Create Account <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 8h10M9 4l4 4-4 4"/></svg>`;
+    btn.disabled = false;
+  }
 }
 
 // ─── INIT ─────────────────────────────────────────────────────
