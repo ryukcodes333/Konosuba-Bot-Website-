@@ -25,16 +25,16 @@ export default async function handler(req, res) {
   const sort = { [sortField]: -1 };
 
   const users = await db.collection("users")
-    .find({ registered: true, banned: { $ne: true } })
+    .find({ bio: { $exists: true, $ne: "" }, banned: { $ne: true } })
     .sort(sort)
     .limit(limit)
-    .project({ name: 1, username: 1, jid: 1, xp: 1, level: 1, wallet: 1, bank: 1, rank: 1, country: 1 })
+    .project({ name: 1, phone: 1, xp: 1, level: 1, wallet: 1, bank: 1, rank: 1, country: 1 })
     .toArray();
 
   const result = users.map((u, i) => ({
     rank: i + 1,
-    name: u.name || u.username || "Unknown",
-    phone: u.jid ? u.jid.replace("@s.whatsapp.net", "").replace(/(\d{3})\d+(\d{3})/, "$1****$2") : "***",
+    name: u.name || "Unknown",
+    phone: u.phone ? String(u.phone).replace(/(\d{3})\d+(\d{3})/, "$1****$2") : "***",
     xp: u.xp || 0,
     level: u.level || 1,
     wallet: u.wallet || 0,

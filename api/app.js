@@ -583,7 +583,7 @@ async function handleLogin(e) {
       method: "POST",
       body: JSON.stringify({ phone, password })
     });
-    setToken(data.user.jid.replace("@s.whatsapp.net", ""));
+    setToken(String(data.user.phone));
     currentUser = data.user;
     updateNavAuth();
     toast("Welcome back, " + (data.user.name || "adventurer") + "!", "success");

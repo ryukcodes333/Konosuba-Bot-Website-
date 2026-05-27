@@ -26,13 +26,11 @@ export default async function handler(req, res) {
 
     const cleanPhone = phone.replace(/\D/g, "");
     const user = await db.collection("users").findOne({
-      $or: [
-        { jid: { $regex: cleanPhone } },
-        { username: phone }
-      ]
+      phone: cleanPhone
     });
 
-    if (!user) return res.status(401).json({ error: "User not found. Register on WhatsApp first." });
+    if (!user) return res.status(401).json({ error: "User not found. Register on WhatsApp first using .reg <name> | <password>" });
+    if (!user.password) return res.status(401).json({ error: "No password set. Re-register on WhatsApp using .reg <name> | <password>" });
     if (user.password !== password) return res.status(401).json({ error: "Wrong password" });
     if (user.banned) return res.status(403).json({ error: "Account banned" });
 
@@ -46,7 +44,7 @@ export default async function handler(req, res) {
 
     const phone = Buffer.from(auth.replace("Bearer ", ""), "base64").toString();
     const cleanPhone = phone.replace(/\D/g, "");
-    const user = await db.collection("users").findOne({ jid: { $regex: cleanPhone } });
+    const user = await db.collection("users").findOne({ phone: cleanPhone });
     if (!user) return res.status(401).json({ error: "Not found" });
 
     const { password: _p, ...safeUser } = user;

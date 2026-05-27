@@ -20,7 +20,7 @@ export default async function handler(req, res) {
   const db = await getDb();
 
   const [users, cards, pokemons, guilds] = await Promise.all([
-    db.collection("users").countDocuments({ registered: true }),
+    db.collection("users").countDocuments({ bio: { $exists: true, $ne: "" } }),
     db.collection("cards").countDocuments(),
     db.collection("userpokemons").countDocuments(),
     db.collection("guilds").countDocuments()

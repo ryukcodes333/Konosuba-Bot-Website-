@@ -27,14 +27,14 @@ export default async function handler(req, res) {
   const db = await getDb();
   const phone = getPhone(auth);
   const cleanPhone = phone.replace(/\D/g, "");
-  const user = await db.collection("users").findOne({ jid: { $regex: cleanPhone } });
+  const user = await db.collection("users").findOne({ phone: cleanPhone });
   if (!user) return res.status(401).json({ error: "User not found" });
 
   if (req.method === "GET") {
     const [inventory, pokemons, cards] = await Promise.all([
-      db.collection("inventories").find({ phone: { $regex: cleanPhone } }).toArray(),
-      db.collection("userpokemons").find({ phone: { $regex: cleanPhone } }).toArray(),
-      db.collection("usercards").find({ phone: { $regex: cleanPhone } }).toArray()
+      db.collection("inventories").find({ phone: cleanPhone }).toArray(),
+      db.collection("userpokemons").find({ phone: cleanPhone }).toArray(),
+      db.collection("usercards").find({ phone: cleanPhone }).toArray()
     ]);
 
     const { password: _p, ...safeUser } = user;
