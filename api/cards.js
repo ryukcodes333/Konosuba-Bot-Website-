@@ -1,14 +1,38 @@
-import { MongoClient } from "mongodb";
+import { readFileSync } from "fs";
+import { join, dirname } from "path";
+import { fileURLToPath } from "url";
 
-const uri = process.env.MONGODB_URI;
-let client;
+const __dirname = dirname(fileURLToPath(import.meta.url));
 
-async function getDb() {
-  if (!client) {
-    client = new MongoClient(uri);
-    await client.connect();
+const TIER_MAP = {
+  Common:    "1",
+  Uncommon:  "2",
+  Rare:      "3",
+  Epic:      "4",
+  Legendary: "5",
+  Mythic:    "6",
+  Shadow:    "7",
+  Void:      "8",
+};
+
+const TIER_NAME = {
+  "1": "Common",
+  "2": "Uncommon",
+  "3": "Rare",
+  "4": "Epic",
+  "5": "Legendary",
+  "6": "Mythic",
+  "7": "Shadow",
+  "8": "Void",
+};
+
+let _cards = null;
+function loadCards() {
+  if (!_cards) {
+    const raw = readFileSync(join(__dirname, "../card.json"), "utf8");
+    _cards = JSON.parse(raw);
   }
-  return client.db("test");
+  return _cards;
 }
 
 export default async function handler(req, res) {
@@ -17,23 +41,33 @@ export default async function handler(req, res) {
   res.setHeader("Access-Control-Allow-Headers", "Content-Type");
   if (req.method === "OPTIONS") return res.status(200).end();
 
-  const db = await getDb();
-  const page = Math.max(1, parseInt(req.query.page || "1"));
-  const limit = Math.min(parseInt(req.query.limit || "24"), 48);
-  const tier = req.query.tier;
-  const search = req.query.search;
+  try {
+    let cards = loadCards();
 
-  const filter = {};
-  if (tier && tier !== "all") filter.rarity = tier;
-  if (search) filter.name = { $regex: search, $options: "i" };
+    const tierFilter = req.query.tier;
+    const search     = (req.query.search || "").trim().toLowerCase();
+    const page       = Math.max(1, parseInt(req.query.page  || "1"));
+    const limit      = Math.min(48, parseInt(req.query.limit || "24"));
 
-  const total = await db.collection("cards").countDocuments(filter);
-  const cards = await db.collection("cards")
-    .find(filter)
-    .sort({ name: 1 })
-    .skip((page - 1) * limit)
-    .limit(limit)
-    .toArray();
+    if (tierFilter && tierFilter !== "all") {
+      const numericTier = TIER_MAP[tierFilter] || tierFilter;
+      cards = cards.filter(c => c.tier === numericTier);
+    }
 
-  return res.json({ cards, total, page, limit });
+    if (search) {
+      cards = cards.filter(c => c.title.toLowerCase().includes(search));
+    }
+
+    const total = cards.length;
+    const slice = cards.slice((page - 1) * limit, page * limit).map(c => ({
+      name:   c.title,
+      rarity: TIER_NAME[c.tier] || `T${c.tier}`,
+      tier:   `T${c.tier}`,
+      shoob_url: c.url,
+    }));
+
+    return res.json({ cards: slice, total, page, limit });
+  } catch (err) {
+    return res.status(500).json({ error: "Failed to load cards", detail: err.message });
+  }
 }
