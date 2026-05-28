@@ -156,6 +156,11 @@ async function renderShop() {
       return;
     }
   }
+  const chip = document.getElementById("shop-balance-chip");
+  if (chip && currentUser) {
+    chip.textContent = `🪙 ${fmtNum(currentUser.wallet || 0)} coins`;
+    chip.style.display = "inline-flex";
+  }
   renderShopGrid();
 }
 
@@ -185,8 +190,23 @@ function setShopFilter(f) {
   renderShopGrid();
 }
 
-function buyItem(key, name) {
-  toast(`Send ".buy ${key}" on WhatsApp to purchase ${name}!`, "success");
+async function buyItem(key, name) {
+  if (!currentUser) { toast("Login to buy items!", "error"); return; }
+  const btn = document.querySelector(`button[onclick="buyItem('${key}','${name}')"]`);
+  if (btn) { btn.disabled = true; btn.textContent = "…"; }
+  try {
+    const data = await api("/shop?action=buy", {
+      method: "POST",
+      body: JSON.stringify({ key }),
+    });
+    toast(`${data.item?.emoji || ""} ${data.message}`, "success");
+    currentUser.wallet = data.newBalance;
+    document.querySelectorAll(".shop-balance").forEach(el => el.textContent = `🪙 ${fmtNum(data.newBalance)}`);
+    if (btn) { btn.textContent = "Bought ✓"; btn.style.background = "rgba(16,185,129,0.2)"; btn.style.color = "#34d399"; }
+  } catch (e) {
+    toast(e.message, "error");
+    if (btn) { btn.disabled = false; btn.textContent = "Buy"; }
+  }
 }
 
 // ─── LEADERBOARD ──────────────────────────────────────────────
@@ -289,7 +309,82 @@ function onCardsSearch(val) {
 }
 
 // ─── POKEMON PAGE ─────────────────────────────────────────────
-function renderPokemon() { /* static — no action needed */ }
+let _allPoke = [];
+let _pokePage = 1;
+let _pokeSearch = "";
+let _pokeType = "all";
+const POKE_PER_PAGE = 20;
+
+async function renderPokemon() {
+  if (_allPoke.length === 0) {
+    loading("poke-grid");
+    try {
+      const res = await fetch("https://pokeapi.co/api/v2/pokemon?limit=898");
+      const data = await res.json();
+      _allPoke = data.results.map((p, i) => ({
+        id: i + 1,
+        name: p.name.charAt(0).toUpperCase() + p.name.slice(1).replace(/-/g, " "),
+        sprite: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${i + 1}.png`,
+      }));
+    } catch {
+      empty("poke-grid", "Failed to load Pokédex. Check your internet connection.");
+      return;
+    }
+  }
+  _renderPokeGrid();
+}
+
+function _filteredPoke() {
+  return _allPoke.filter(p => {
+    if (_pokeSearch && !p.name.toLowerCase().includes(_pokeSearch)) return false;
+    return true;
+  });
+}
+
+function _renderPokeGrid() {
+  const filtered = _filteredPoke();
+  const totalPages = Math.ceil(filtered.length / POKE_PER_PAGE);
+  if (_pokePage > totalPages) _pokePage = 1;
+  const slice = filtered.slice((_pokePage - 1) * POKE_PER_PAGE, _pokePage * POKE_PER_PAGE);
+  const grid = document.getElementById("poke-grid");
+  if (!slice.length) { empty("poke-grid", "No Pokémon found"); document.getElementById("poke-pagination").innerHTML = ""; return; }
+  grid.innerHTML = slice.map(p => `
+    <div class="poke-card">
+      <img class="poke-sprite" src="${p.sprite}" alt="${p.name}" loading="lazy"
+           onerror="this.style.display='none'">
+      <div>
+        <div class="poke-name">${p.name}</div>
+        <div class="poke-meta">#${String(p.id).padStart(3, "0")}</div>
+      </div>
+    </div>
+  `).join("");
+  const paginEl = document.getElementById("poke-pagination");
+  if (totalPages <= 1) { paginEl.innerHTML = ""; return; }
+  const start = Math.max(1, _pokePage - 2), end = Math.min(totalPages, _pokePage + 2);
+  let html = _pokePage > 1 ? `<button class="page-btn" onclick="_goToPokePage(1)">«</button>` : "";
+  if (start > 2) html += `<span style="color:var(--muted);align-self:center">…</span>`;
+  for (let i = start; i <= end; i++)
+    html += `<button class="page-btn${i === _pokePage ? " active" : ""}" onclick="_goToPokePage(${i})">${i}</button>`;
+  if (end < totalPages - 1) html += `<span style="color:var(--muted);align-self:center">…</span>`;
+  if (_pokePage < totalPages) html += `<button class="page-btn" onclick="_goToPokePage(${totalPages})">»</button>`;
+  paginEl.innerHTML = html;
+}
+
+function _goToPokePage(page) { _pokePage = page; _renderPokeGrid(); window.scrollTo(0, 0); }
+
+function onPokeSearch(val) {
+  _pokeSearch = val.toLowerCase().trim();
+  _pokePage = 1;
+  if (_allPoke.length) _renderPokeGrid();
+}
+
+function setPokeType(type) {
+  _pokeType = type;
+  document.querySelectorAll("#poke-type-filters .filter-pill").forEach(p =>
+    p.classList.toggle("active", p.dataset.pt === type));
+  _pokePage = 1;
+  if (_allPoke.length) _renderPokeGrid();
+}
 
 // ─── MEMBERSHIP PAGE ──────────────────────────────────────────
 async function renderMembership() {

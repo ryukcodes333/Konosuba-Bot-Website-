@@ -36,11 +36,16 @@
 <nav>
   <a class="nav-logo" href="#" data-page="home">
     <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <rect width="36" height="36" rx="10" fill="url(#ng)"/>
-      <text x="18" y="24" text-anchor="middle" font-family="sans-serif" font-weight="900" font-size="18" fill="white">K</text>
-      <defs><linearGradient id="ng" x1="0" y1="0" x2="36" y2="36" gradientUnits="userSpaceOnUse">
-        <stop stop-color="#0096c7"/><stop offset="1" stop-color="#48cae4"/>
-      </linearGradient></defs>
+      <rect width="36" height="36" rx="10" fill="url(#logo-g)"/>
+      <!-- Explosion star — Megumin/Konosuba motif -->
+      <path d="M18 5 L20.4 12.8 L28.5 10.6 L23.2 16.8 L28.5 23 L20.4 20.8 L18 28.5 L15.6 20.8 L7.5 23 L12.8 16.8 L7.5 10.6 L15.6 12.8 Z" fill="white" opacity="0.95"/>
+      <defs>
+        <linearGradient id="logo-g" x1="0" y1="0" x2="36" y2="36" gradientUnits="userSpaceOnUse">
+          <stop stop-color="#e63946"/>
+          <stop offset="0.55" stop-color="#c1121f"/>
+          <stop offset="1" stop-color="#f4a261"/>
+        </linearGradient>
+      </defs>
     </svg>
     <span>Konosuba</span>
   </a>
@@ -94,35 +99,52 @@
 <!-- ════════════════════════════════════════════════════════════ -->
 <div id="page-home" class="page active">
 
-  <!-- HERO -->
-  <section class="hero">
-    <div class="hero-bg"></div>
+  <!-- HERO — cinematic full-screen -->
+  <section class="hero hero-landing">
+    <div class="hlanding-bg" style="background-image:url('assets/hero.jpg')"></div>
+    <div class="hlanding-overlay"></div>
     <div class="hero-particles">
       <span></span><span></span><span></span><span></span>
       <span></span><span></span><span></span><span></span>
     </div>
-    <div class="hero-badge">
-      <svg width="14" height="14" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M13.6 2.4C12.2 0.9 10.2 0 8 0C3.6 0 0 3.6 0 8C0 9.4 0.4 10.8 1 12L0 16L4 15C5.2 15.6 6.6 16 8 16C12.4 16 16 12.4 16 8C16 5.8 15.1 3.8 13.6 2.4Z" fill="#25D366"/>
-      </svg>
-      The ultimate Konosuba WhatsApp experience
+
+    <div class="hlanding-content">
+      <div class="hlanding-text">
+        <div class="hero-badge" style="width:fit-content">
+          <svg width="13" height="13" viewBox="0 0 16 16" fill="none">
+            <path d="M13.6 2.4C12.2 0.9 10.2 0 8 0C3.6 0 0 3.6 0 8C0 9.4 0.4 10.8 1 12L0 16L4 15C5.2 15.6 6.6 16 8 16C12.4 16 16 12.4 16 8C16 5.8 15.1 3.8 13.6 2.4Z" fill="#25D366"/>
+          </svg>
+          WhatsApp Gaming Bot · Always Free
+        </div>
+
+        <h1 class="hlanding-title">
+          Enter the<br><span class="grad-blue">Konosuba World</span>
+        </h1>
+
+        <p class="hlanding-desc">
+          A legendary WhatsApp gaming companion. Collect over 35,000 anime cards, catch Pokémon, conquer dungeons, and rule the economy — all without leaving WhatsApp.
+        </p>
+
+        <div class="hero-actions">
+          <a class="btn btn-primary" href="#register" data-page="register">
+            Start your journey
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
+          </a>
+          <a class="btn btn-ghost" href="#leaderboard" data-page="leaderboard">View Leaderboard</a>
+        </div>
+
+        <div class="hlanding-mini-stats">
+          <div>🎴 <strong>35,000+</strong> Anime Cards</div>
+          <div>⚡ <strong>898</strong> Pokémon</div>
+          <div>⚔️ <strong>RPG</strong> Dungeons</div>
+          <div>🏆 <strong>Free</strong> to Play</div>
+        </div>
+      </div>
     </div>
-    <h1>Enter the<br><span class="grad-blue">Konosuba World</span></h1>
-    <p>A feature-rich WhatsApp gaming companion. Collect anime cards, battle Pokémon, conquer dungeons, and dominate the economy.</p>
-    <div class="hero-actions">
-      <a class="btn btn-primary" href="#register" data-page="register">
-        Start your journey
-        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
-      </a>
-      <a class="btn btn-ghost" href="#leaderboard" data-page="leaderboard">View Leaderboard</a>
-    </div>
-    <div class="hero-cards-float">
-      <div class="hero-card-float">🃏</div>
-      <div class="hero-card-float">⚡</div>
-      <div class="hero-card-float">🃏</div>
-      <div class="hero-card-float">⚔️</div>
-      <div class="hero-card-float">🃏</div>
-      <div class="hero-card-float">🎱</div>
+
+    <div class="hero-scroll-hint" onclick="document.querySelector('.stats-bar').scrollIntoView({behavior:'smooth'})">
+      <div class="scroll-mouse"><div class="scroll-dot"></div></div>
+      <span>Scroll</span>
     </div>
   </section>
 
@@ -305,9 +327,12 @@
 <!-- ════════════════════════════════════════════════════════════ -->
 <div id="page-shop" class="page">
   <section class="section">
-    <div class="section-title">
-      <svg style="display:inline;vertical-align:-4px;margin-right:8px" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
-      The Grand Bazaar
+    <div style="display:flex;align-items:center;flex-wrap:wrap;gap:12px;margin-bottom:0.25rem">
+      <div class="section-title" style="margin:0">
+        <svg style="display:inline;vertical-align:-4px;margin-right:8px" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+        The Grand Bazaar
+      </div>
+      <span id="shop-balance-chip" class="shop-balance-chip" style="display:none">🪙 0</span>
     </div>
     <div class="section-sub">Equip yourself with the finest gear. Use your hard-earned coins to gain an edge.</div>
     <div class="filters" id="shop-filters">
