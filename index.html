@@ -245,21 +245,27 @@
     <div style="max-width:1200px;margin:0 auto">
       <div class="section-title">How to get started</div>
       <div class="section-sub">Up and running in under 2 minutes</div>
-      <div style="display:flex;flex-direction:column;gap:1.5rem;max-width:560px">
+      <div style="display:flex;flex-direction:column;gap:1.5rem;max-width:600px">
+
+        <div style="padding:1rem 1.25rem;background:rgba(0,150,199,0.08);border:1px solid rgba(0,180,216,0.2);border-radius:var(--radius-sm);font-size:0.82rem;color:var(--muted2)">
+          ✦ <strong style="color:var(--cyan)">Option A — Web only:</strong> Register directly on this site (Sign Up page), no WhatsApp needed.<br>
+          ✦ <strong style="color:var(--cyan)">Option B — WhatsApp first:</strong> Use <code style="background:var(--bg3);padding:1px 6px;border-radius:4px;color:var(--cyan)">.reg</code> on the bot, then get your ID with <code style="background:var(--bg3);padding:1px 6px;border-radius:4px;color:var(--cyan)">.myid</code> and login here.
+        </div>
+
         <div class="step">
           <div class="step-num">1</div>
-          <div><strong>Add the bot on WhatsApp</strong><br><span style="font-size:0.85rem;color:var(--muted)">Send a message to the Konosuba Bot number to get started.</span></div>
+          <div><strong>Message the bot on WhatsApp</strong><br><span style="font-size:0.85rem;color:var(--muted)">Send <strong>.reg YourName | YourPassword</strong> to register. E.g. <em>.reg Shadow | mypass123</em></span></div>
         </div>
         <div class="step">
           <div class="step-num">2</div>
           <div>
-            <strong>Register with <code style="background:var(--bg3);padding:1px 7px;border-radius:5px;font-size:0.82rem;color:var(--purple-light)">.reg Name | Password</code></strong>
-            <br><span style="font-size:0.85rem;color:var(--muted)">Send <strong>.reg YourName | YourPassword</strong> in WhatsApp to create your account. E.g. <em>.reg Shadow | mypass123</em></span>
+            <strong>Get your ID — send <code style="background:var(--bg3);padding:1px 7px;border-radius:5px;font-size:0.82rem;color:var(--cyan)">.myid</code></strong>
+            <br><span style="font-size:0.85rem;color:var(--muted)">The bot replies with your unique ID number. Copy it — this is what you use to login on this site, <em>not</em> your regular phone number.</span>
           </div>
         </div>
         <div class="step">
           <div class="step-num">3</div>
-          <div><strong>Login on the website</strong><br><span style="font-size:0.85rem;color:var(--muted)">Use your WhatsApp number and the password you set to log in here.</span></div>
+          <div><strong>Login on the website</strong><br><span style="font-size:0.85rem;color:var(--muted)">Enter your <strong>.myid</strong> number and the password you set in step 1.</span></div>
         </div>
         <div class="step">
           <div class="step-num">4</div>
@@ -554,8 +560,8 @@
       <p>Login with your phone number and password</p>
       <form onsubmit="handleLogin(event)" autocomplete="on">
         <div class="form-group">
-          <label for="login-phone">WhatsApp Number</label>
-          <input id="login-phone" class="form-input" type="tel" placeholder="+2348012345678" autocomplete="tel" required>
+          <label for="login-phone">Phone / WhatsApp ID</label>
+          <input id="login-phone" class="form-input" type="tel" placeholder="e.g. 2348012345678 or your bot ID" autocomplete="tel" required>
         </div>
         <div class="form-group">
           <label for="login-password">Password</label>
@@ -587,9 +593,9 @@
           <input id="reg-name" class="form-input" type="text" placeholder="e.g. Shadow, Kazuma" autocomplete="nickname" required minlength="2" maxlength="32">
         </div>
         <div class="form-group">
-          <label for="reg-phone">Phone Number <span style="color:var(--muted);font-weight:400">(with country code)</span></label>
-          <input id="reg-phone" class="form-input" type="tel" placeholder="e.g. 2348012345678" autocomplete="tel" required>
-          <div class="form-hint">Include country code, no spaces or + — e.g. 2348012345678 for Nigeria</div>
+          <label for="reg-phone">Phone / WhatsApp ID</label>
+          <input id="reg-phone" class="form-input" type="tel" placeholder="e.g. 2348012345678 or your bot ID" autocomplete="tel" required>
+          <div class="form-hint">If you've chatted with the bot before, send <strong>.myid</strong> to it and use that number here — not your regular phone number.</div>
         </div>
         <div class="form-group">
           <label for="reg-password">Password</label>
