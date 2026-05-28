@@ -25,7 +25,7 @@ export default async function handler(req, res) {
   const sort = { [sortField]: -1 };
 
   const users = await db.collection("users")
-    .find({ bio: { $exists: true, $ne: "" }, banned: { $ne: true } })
+    .find({ banned: { $ne: true } })
     .sort(sort)
     .limit(limit)
     .project({ name: 1, phone: 1, xp: 1, level: 1, wallet: 1, bank: 1, rank: 1, country: 1 })

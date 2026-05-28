@@ -55,12 +55,12 @@ export default async function handler(req, res) {
     }
 
     if (search) {
-      cards = cards.filter(c => c.title.toLowerCase().includes(search));
+      cards = cards.filter(c => (c.title || c.name || "").toLowerCase().includes(search));
     }
 
     const total = cards.length;
     const slice = cards.slice((page - 1) * limit, page * limit).map(c => ({
-      name:   c.title,
+      name:   c.title || c.name || "Unknown",
       rarity: TIER_NAME[c.tier] || `T${c.tier}`,
       tier:   `T${c.tier}`,
       shoob_url: c.url,
